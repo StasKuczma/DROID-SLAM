@@ -14,10 +14,9 @@ import sys
 class ImageCreator():
     # Must have __init__(self) function for a class, similar to a C++ class constructor.
     def __init__(self):
-        #save_dir = '/home/mnowicki/Desktop/img/'
-        #filename = '/home/mnowicki/Desktop/InnolotWZL2/Outdoor/test_2018-05-25-08-56-06_naOkolo.bag'
-	save_dir = '/home/mnowicki/Desktop/img/'
-        filename = '/home/mnowicki/catkin_adasub/2018-12-18-15-48-55.bag'
+    #tutaj należy umieścić ścieżki zapisu i odczytu plików
+	#save_dir = ''
+     #   filename = ''
 
         # Use a CvBridge to convert ROS images to OpenCV images so they can be saved.
         self.bridge = CvBridge()
@@ -26,15 +25,15 @@ class ImageCreator():
         i = 0;
         with rosbag.Bag(filename, 'r') as bag:
             for topic, msg, t in bag.read_messages():
-                #if topic == "/bluefox3/stereo/left/image_raw":
-                if topic == "/camera/image_mono":
+            #należy przetwarzać obraz z prawej i lewej kamery oddzielnie
+                if topic == "/pylon_stereo_node/right/image_raw":
                     try:
                         cv_image = self.bridge.imgmsg_to_cv2(msg, "bgr8")
                     except CvBridgeError, e:
                         print e
                     timestr = "%06d" % i
                     i = i + 1;
-                    image_name = str(save_dir)+"/left_"+timestr+".png"
+                    image_name = str(save_dir)+"/right_"+timestr+".png"
                     cv2.imwrite(image_name, cv_image)
                 
 
